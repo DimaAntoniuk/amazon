@@ -1,7 +1,8 @@
+import interfaces
 import models
 
 
-class ProductManager:
+class BussinessProductManager(ProductManager):
     def get_by_id(id):
         pass
     def get_all():
@@ -12,7 +13,7 @@ class ProductManager:
         pass
 
 
-class SubgroupManager:
+class BussinessSubgroupManager(SubgroupManager):
     def get_by_id(id):
         pass
     def get_all():
@@ -23,7 +24,7 @@ class SubgroupManager:
         pass
 
 
-class GroupManager:
+class BussinessGroupManager(GroupManager):
     def get_by_id(id):
         pass
     def get_all():
@@ -34,7 +35,7 @@ class GroupManager:
         pass
 
 
-class CustomerManager:
+class BussinessCustomerManager(CustomerManager):
     def get_by_id(id):
         pass
     def get_all():
@@ -45,7 +46,7 @@ class CustomerManager:
         pass
 
 
-class PaymentManager:
+class BussinessPaymentManager(PaymentManager):
     def get_by_id(id):
         pass
     def get_all():
@@ -56,7 +57,7 @@ class PaymentManager:
         pass
 
 
-class CartManager:
+class BussinessCartManager(CartManager):
     def get_by_id(id):
         pass
     def get_all():
@@ -67,7 +68,7 @@ class CartManager:
         pass
 
 
-class SellerManager:
+class BussinessSellerManager(SellerManager):
     def get_by_id(id):
         pass
     def get_all():

@@ -2,6 +2,8 @@ from app import db
 
 
 class Product(db.Model):
+    __tablename__ = 'product'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     subgroup_id = db.Column(db.Integer, db.ForeignKey('subgroup.id'))
@@ -10,7 +12,10 @@ class Product(db.Model):
     def __repr__(self):
         return f'Product: {self.name}'
 
+
 class Subgroup(db.Model):
+    __tablename__ = 'subgrpoup'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
@@ -19,7 +24,10 @@ class Subgroup(db.Model):
     def __repr__(self):
         return f'Subgroup: {self.name}'
 
+
 class Group(db.Model):
+    __tablename__ = 'group'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     subgroups = db.relationship('Subgroup', backref='group', lazy=True)
@@ -27,7 +35,10 @@ class Group(db.Model):
     def __repr__(self):
         return f'Group: {self.name}'
 
+
 class Customer(db.Model):
+    __tablename__ = 'customer'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     address = db.Column(db.String(50), nullable=False)
@@ -38,7 +49,10 @@ class Customer(db.Model):
         return f'Customer: [{self.name},
                 {self.address}, {self.phone_number}]'
 
+
 class Payment(db.Model):
+    __tablename__ = 'payment'
+    
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), primary_key=True)
     card_type = db.Column(db.String(50), nullable=False)
     card_number = db.Column(db.Integer, nullable=False)
@@ -48,6 +62,8 @@ class Payment(db.Model):
                 {self.card_type}, {self.card_number}]'
 
 class Cart(db.Model):
+    __tablename__ = 'cart'
+    
     id = db.Column(db.Integer, primary_key=True)
     number_of_products = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Integer, nullable=False)
@@ -58,7 +74,10 @@ class Cart(db.Model):
         return f'Cart: [{self.number_of_products},
                 {self.total}, {self.products}]'
 
+
 class Seller(db.Model):
+    __tablename__ = 'seller'
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(99), nullable=False)
     products = db.relationship('Product', backref='seller', lazy=True)
