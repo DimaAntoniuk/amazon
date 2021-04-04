@@ -1,5 +1,5 @@
 import interfaces
-import models
+from models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
 
 
 class PresentationProductManager(ProductManager):

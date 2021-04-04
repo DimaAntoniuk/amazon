@@ -1,4 +1,4 @@
-import models
+from models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
 
 
 class ProductManager:
@@ -6,9 +6,9 @@ class ProductManager:
         pass
     def get_all():
         pass
-    def edit(id):
+    def remove(id):
         pass
-    def post(product):
+    def add(data):
         pass
 
 
@@ -17,9 +17,9 @@ class SubgroupManager:
         pass
     def get_all():
         pass
-    def edit(id):
+    def remove(id):
         pass
-    def post(subgroup):
+    def add(data):
         pass
 
 
@@ -28,9 +28,9 @@ class GroupManager:
         pass
     def get_all():
         pass
-    def edit(id):
+    def remove(id):
         pass
-    def post(group):
+    def add(data):
         pass
 
 
@@ -39,9 +39,9 @@ class CustomerManager:
         pass
     def get_all():
         pass
-    def edit(id):
+    def remove(id):
         pass
-    def post(customer):
+    def add(data):
         pass
 
 
@@ -50,9 +50,9 @@ class PaymentManager:
         pass
     def get_all():
         pass
-    def edit(id):
+    def remove(id):
         pass
-    def post(payment):
+    def add(data):
         pass
 
 
@@ -61,9 +61,9 @@ class CartManager:
         pass
     def get_all():
         pass
-    def edit(id):
+    def remove(id):
         pass
-    def post(cart):
+    def add(data):
         pass
 
 
@@ -72,7 +72,7 @@ class SellerManager:
         pass
     def get_all():
         pass
-    def edit(id):
+    def remove(id):
         pass
-    def post(seller):
+    def add(data):
         pass

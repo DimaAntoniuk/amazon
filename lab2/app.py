@@ -1,11 +1,8 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from setup import app, db
+from models.models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////database/amazon.db'
-db = SQLAlchemy(app)
-
-from models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
-
-db.create_all()
-db.session.commit()
+with app.app_context():
+    # db.drop_all(app=app)
+    db.create_all(app=app)
+    print('1') if db.session.query(Product).all() else print('0')
+    
