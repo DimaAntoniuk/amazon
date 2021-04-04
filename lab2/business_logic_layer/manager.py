@@ -2,7 +2,7 @@ import interfaces
 from models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
 
 
-class BussinessProductManager(ProductManager):
+class BusinessProductManager(ProductManager):
     def __init__(self, data_access_manager):
         self.data_access_manager = data_access_manager
     def get_product_by_id(self, id):
@@ -15,7 +15,7 @@ class BussinessProductManager(ProductManager):
         return self.data_access_manager.add(data)
 
 
-class BussinessSubgroupManager(SubgroupManager):
+class BusinessSubgroupManager(SubgroupManager):
     def __init__(self, data_access_manager):
         self.data_access_manager = data_access_manager
     def get_subgroup_by_id(self, id):
@@ -28,7 +28,7 @@ class BussinessSubgroupManager(SubgroupManager):
         return self.data_access_manager.add(data)
 
 
-class BussinessGroupManager(GroupManager):
+class BusinessGroupManager(GroupManager):
     def __init__(self, data_access_manager):
         self.data_access_manager = data_access_manager
     def get_group_by_id(self, id):
@@ -41,7 +41,7 @@ class BussinessGroupManager(GroupManager):
         return self.data_access_manager.add(data)
 
 
-class BussinessCustomerManager(CustomerManager):
+class BusinessCustomerManager(CustomerManager):
     def __init__(self, data_access_manager):
         self.data_access_manager = data_access_manager
     def get_customer_by_id(self, id):
@@ -54,7 +54,7 @@ class BussinessCustomerManager(CustomerManager):
         return self.data_access_manager.add(data)
 
 
-class BussinessPaymentManager(PaymentManager):
+class BusinessPaymentManager(PaymentManager):
     def __init__(self, data_access_manager):
         self.data_access_manager = data_access_manager
     def get_payment_by_id(self, id):
@@ -67,7 +67,7 @@ class BussinessPaymentManager(PaymentManager):
         return self.data_access_manager.add(data)
 
 
-class BussinessCartManager(CartManager):
+class BusinessCartManager(CartManager):
     def __init__(self, data_access_manager):
         self.data_access_manager = data_access_manager
     def get_cart_by_id(self, id):
@@ -80,7 +80,7 @@ class BussinessCartManager(CartManager):
         return self.data_access_manager.add(data)
 
 
-class BussinessSellerManager(SellerManager):
+class BusinessSellerManager(SellerManager):
     def __init__(self, data_access_manager):
         self.data_access_manager = data_access_manager
     def get_seller_by_id(self, id):
