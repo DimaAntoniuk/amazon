@@ -1,4 +1,4 @@
-from models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
+from models.models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
 
 
 class ProductManager:

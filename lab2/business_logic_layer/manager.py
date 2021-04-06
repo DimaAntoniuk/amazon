@@ -1,5 +1,6 @@
-import interfaces
-from models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
+from interfaces import ProductManager, SubgroupManager, GroupManager,\
+                       CustomerManager, PaymentManager, CartManager, SellerManager
+from models.models import Product, Subgroup, Group, Customer, Payment, Cart, Seller
 
 
 class BusinessProductManager(ProductManager):
