@@ -34,10 +34,10 @@ class Importer:
             self.product_manager.add_from_csv(
                 product_columns, product_data)
 
-        product_columns, product_datalist = parsed_csv['product']
-        for product_data in product_datalist:
-            self.product_manager.add_from_csv(
-                product_columns, product_data)
+        cart_columns, cart_datalist = parsed_csv['cart']
+        for cart_data in cart_datalist:
+            self.cart_manager.add_from_csv(
+                cart_columns, cart_data)
         
         customer_columns, customer_datalist = parsed_csv['customer']
         for customer_data in customer_datalist:

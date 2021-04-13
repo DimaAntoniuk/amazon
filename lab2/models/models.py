@@ -29,7 +29,7 @@ class Cart(Base):
     def __repr__(self):
         string =  f'Cart: ' 
         if hasattr(self, 'id'):
-            string += f'{self.id}'
+            string += f'id: {self.id}, '
         string += f'number_of_products:{self.number_of_products}, total:{self.total}'
         return string
 

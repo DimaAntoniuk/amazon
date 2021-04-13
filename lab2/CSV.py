@@ -82,10 +82,10 @@ def generate_random_csv(filename='generated_data.csv', entries=250):
     data_list = []
     for id in range(1, entries + 1):
         name = random.choice(names)
-        phone = ''.join(random.choices(string.digits, k=8))
         address = ''.join(random.choices(string.ascii_lowercase, k=random.randint(4, 12))).title()
+        phone = ''.join(random.choices(string.digits, k=8))
         cart_id = id
-        data_list.append(','.join([str(id), name, phone, address, str(cart_id)]) + '\n')
+        data_list.append(','.join([str(id), name, address, phone, str(cart_id)]) + '\n')
     with open(filename, 'a') as file:
         file.write('customer\n')
         file.write(customer_columns)
@@ -131,6 +131,6 @@ def parse_csv(filename='generated_data.csv'):
     }
 
 if __name__ == '__main__':
-    # generate_random_csv()
-    output = parse_csv()
-    print(str(output))
+    generate_random_csv()
+    # output = parse_csv()
+    # print(str(output))
