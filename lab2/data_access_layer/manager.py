@@ -17,6 +17,20 @@ class AccessProductManager(ProductManager):
         product = self.session.query(Product).get(id)
         self.session.delete(product)
     
+    def edit(self, id, name=None, subgroup_id=None, seller_id=None, cart_id=None):
+        product = self.session.query(Product).get(id)
+        self.session.delete(product)
+        if not name is None:
+            product.name = name
+        if not subgroup_id is None:
+            product.subgroup_id = subgroup_id
+        if not seller_id is None:
+            product.seller_id = seller_id
+        if not cart_id is None:
+            product.cart_id = cart_id
+        self.session.add(product)
+
+
     def add(self, name, subgroup_id=None, seller_id=None, cart_id=None):
         product = Product()
         product.name = name

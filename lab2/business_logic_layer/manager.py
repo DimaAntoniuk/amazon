@@ -12,8 +12,10 @@ class BusinessProductManager(ProductManager):
         return self.data_access_manager.get_all()
     def remove_product(self, id):
         return self.data_access_manager.remove(id)
-    def add_product(self, data):
-        return self.data_access_manager.add(data)
+    def edit_product(self, id, name=None, subgroup_id=None, seller_id=None, cart_id=None):
+        return self.data_access_manager.edit(id, name=name, subgroup_id=subgroup_id, seller_id=seller_id, cart_id=cart_id)
+    def add_product(self, name, subgroup_id=None, seller_id=None, cart_id=None):
+        return self.data_access_manager.add(name=name, subgroup_id=subgroup_id, seller_id=seller_id, cart_id=cart_id)
 
 
 class BusinessSubgroupManager(SubgroupManager):

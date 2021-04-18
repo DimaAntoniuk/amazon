@@ -1,0 +1,242 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "description": "Dima Antoniuk",
+      "version": "1.0.0",
+      "title": "Software and doc design Lab",
+      "contact": {
+        "email": "myemail@gmail.com"
+      },
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "servers": [
+      {
+        "url": "/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Product Request",
+        "description": "API for requesting and return product requests"
+      }
+    ],
+    "paths": {
+      "/request": {
+        "get": {
+          "tags": [
+            "Product Request"
+          ],
+          "summary": "Returns productRequests",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/productRequests"
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Product Request"
+          ],
+          "summary": "Create a new product request system",
+          "requestBody": {
+            "description": "Product Request Post Object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/productRequestPostBody"
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "201": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/id"
+              }
+            },
+            "400": {
+              "description": "Failed. Bad post data."
+            }
+          }
+        }
+      },
+      "/request/{id}": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the product that we want to match",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Product Request"
+          ],
+          "summary": "Get product request with given ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Product Request id",
+              "schema": {
+                "$ref": "#/components/schemas/id"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/productRequest"
+              }
+            },
+            "400": {
+              "description": "Failed. Misunderstood Request."
+            },
+            "404": {
+              "description": "Failed. Product request not found."
+            }
+          }
+        },
+        "put": {
+          "summary": "edit a product request by ID",
+          "tags": [
+            "Product Request"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Product Request id",
+              "schema": {
+                "$ref": "#/components/schemas/id"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Product Request Object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/productRequest"
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/productRequest"
+              }
+            },
+            "400": {
+              "description": "Failed. Bad post data."
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete Product Request by ID",
+          "tags": [
+            "Product Request"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Product Request Id",
+              "schema": {
+                "$ref": "#/components/schemas/id"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/id"
+              }
+            },
+            "400": {
+              "description": "Failed. Misunderstood Request."
+            },
+            "404": {
+              "description": "Failed. Product Request not found."
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "id": {
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          }
+        },
+        "productRequestPostBody": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "format": "string"
+            }
+          }
+        },
+        "productRequest": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "format": "string"
+            },
+            "subgroup_id": {
+              "type": "string",
+              "format": "email"
+            },
+            "seller_id": {
+              "type": "string",
+              "format": "number"
+            },
+            "cart_id": {
+              "type": "string",
+              "format": "number"
+            }
+          }
+        },
+        "productRequests": {
+          "type": "object",
+          "properties": {
+            "productRequest": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/productRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  }

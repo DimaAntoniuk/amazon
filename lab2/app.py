@@ -6,87 +6,131 @@ from business_logic_layer.manager import BusinessGroupManager,\
 from data_access_layer.manager import AccessGroupManager,\
     AccessSubgroupManager, AccessSellerManager, AccessProductManager,\
     AccessCartManager, AccessCustomerManager, AccessPaymentManager
-from views.view import View
 from business_logic_layer.importer import Importer
-from flask import Flask
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from flask_restplus import Api
+from flask import Flask, jsonify, make_response, Blueprint
+from flask_swagger_ui import get_swaggerui_blueprint
+# from flask_restplus import Api
 from models import db
 
 SQLALCHEMY_DATABASE = 'D:/study/soft_doc/lab2/database/amazon.db'
 
 app = Flask(__name__)
-api = Api()
 
 def initialize_app(flask_app):
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + SQLALCHEMY_DATABASE
-    api.init_app(app)
-
     db.init_app(flask_app)
+    SWAGGER_URL = '/swagger'
+    API_URL = '/static/swagger-ui.json'
+    SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+        SWAGGER_URL,
+        API_URL,
+        config={
+            'app_name': "Custom-Amazon"
+        }
+    )
+    flask_app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 
-def main():
-    initialize_app(app)
-    # engine = create_engine('sqlite:///' + SQLALCHEMY_DATABASE)
-    # Base.metadata.drop_all(bind=engine)
-    # Base.metadata.create_all(bind=engine)
-    # Session = sessionmaker(bind=engine)   
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-        access_group_manager = AccessGroupManager(db.session)
-        access_subgroup_manager = AccessSubgroupManager(db.session)
-        access_seller_manager = AccessSellerManager(db.session)
-        access_product_manager = AccessProductManager(db.session)
-        access_cart_manager = AccessCartManager(db.session)
-        access_customer_manager = AccessCustomerManager(db.session)
-        access_payment_manager = AccessPaymentManager(db.session)
+@app.errorhandler(400)
+def handle_400_error(_error):
+    """Return a http 400 error to client"""
+    return make_response(jsonify({'error': 'Misunderstood'}), 400)
 
-        business_group_manager = BusinessGroupManager(access_group_manager)
-        business_subgroup_manager = BusinessSubgroupManager(access_subgroup_manager)
-        business_seller_manager = BusinessSellerManager(access_seller_manager)
-        business_product_manager = BusinessProductManager(access_product_manager)
-        business_cart_manager = BusinessCartManager(access_cart_manager)
-        business_customer_manager = BusinessCustomerManager(access_customer_manager)
-        business_payment_manager = BusinessPaymentManager(access_payment_manager)
 
-        importer = Importer(
-            group_manager=access_group_manager,
-            subgroup_manager=access_subgroup_manager,
-            seller_manager=access_seller_manager,
-            product_manager=access_product_manager,
-            cart_manager=access_cart_manager,
-            customer_manager=access_customer_manager,
-            payment_manager=access_payment_manager)
-        
-        importer.import_data('generated_data.csv')
-        db.session.commit()
-        
-        print('Groups')
-        for group in business_group_manager.get_all_groups():
-            print(group)
-        print('Subgroup')
-        for subgroup in business_subgroup_manager.get_all_subgroups():
-            print(subgroup)
-        print('Seller')
-        for seller in business_seller_manager.get_all_sellers()[:10]:
-            print(seller)
-        print('Product')
-        for product in business_product_manager.get_all_products()[:10]:
-            print(product)
-        print('Cart')
-        for cart in business_cart_manager.get_all_carts()[:10]:
-            print(cart)
-        print('Customer')
-        for customer in business_customer_manager.get_all_customers()[:10]:
-            print(customer)
-        print('Payment')
-        for payment in business_payment_manager.get_all_payments()[:10]:
-            print(payment)
+@app.errorhandler(401)
+def handle_401_error(_error):
+    """Return a http 401 error to client"""
+    return make_response(jsonify({'error': 'Unauthorised'}), 401)
 
-    app.run()
+
+@app.errorhandler(404)
+def handle_404_error(_error):
+    """Return a http 404 error to client"""
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(500)
+def handle_500_error(_error):
+    """Return a http 500 error to client"""
+    return make_response(jsonify({'error': 'Server error'}), 500)
 
 
 if __name__ == '__main__':
-    main()
+    initialize_app(app)
+    request_api = Blueprint('request_api', __name__)
+    app.register_blueprint(request_api)
+    with app.app_context():
+        # db.drop_all()
+        # db.create_all()
+
+        access_product_manager = AccessProductManager(db.session)
+        business_product_manager = BusinessProductManager(access_product_manager)
+        
+        # importer = Importer(
+        #     group_manager=access_group_manager,
+        #     subgroup_manager=access_subgroup_manager,
+        #     seller_manager=access_seller_manager,
+        #     product_manager=access_product_manager,
+        #     cart_manager=access_cart_manager,
+        #     customer_manager=access_customer_manager,
+        #     payment_manager=access_payment_manager)
+        
+        # importer.import_data('generated_data.csv')
+        # db.session.commit()
+        
+    app.run()
+
+
+@request_api.route('/request', methods=['GET'])
+def get_records():
+    # with app.app_context():
+    #     return jsonify(business_product_manager.get_all_products()[:10])
+    return 'text'
+
+
+@request_api.route('/request/<string:_id>', methods=['GET'])
+def get_record_by_id(_id):
+    with app.app_context():
+        if not business_product_manager.get_product_by_id(_id):
+            abort(404)
+        return jsonify(business_product_manager.get_product_by_id(_id))
+
+
+@request_api.route('/request', methods=['POST'])
+def create_record():
+    if not request.get_json():
+        abort(400)
+
+    data = request.get_json(force=True)
+
+    if not data.get('name'):
+        abort(400)
+    with app.app_context():
+        return jsonify(business_product_manager.add_product(name=name)), 201
+
+
+@request_api.route('/request/<string:_id>', methods=['PUT'])
+def edit_record(_id):
+    with app.app_context():
+        if not business_product_manager.get_product_by_id(_id):
+            abort(404)
+
+        if not request.get_json():
+            abort(400)
+        data = request.get_json(force=True)
+
+        if not data.get('name'):
+            abort(400)
+
+        return jsonify(business_product_manager.edit_product(_id, data.get('name'))), 200
+
+
+@request_api.route('/request/<string:_id>', methods=['DELETE'])
+def delete_record(_id):
+    with app.app_context():
+        if not business_product_manager.get_product_by_id(_id):
+            abort(404)
+
+        business_product_manager.remove_product(_id)
+
+    return '', 204
