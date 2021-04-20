@@ -214,7 +214,7 @@
             },
             "subgroup_id": {
               "type": "string",
-              "format": "email"
+              "format": "number"
             },
             "seller_id": {
               "type": "string",

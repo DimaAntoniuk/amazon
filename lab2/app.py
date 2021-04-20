@@ -7,9 +7,9 @@ from data_access_layer.manager import AccessGroupManager,\
     AccessSubgroupManager, AccessSellerManager, AccessProductManager,\
     AccessCartManager, AccessCustomerManager, AccessPaymentManager
 from business_logic_layer.importer import Importer
-from flask import Flask, jsonify, make_response, Blueprint
+from flask import Flask, jsonify, make_response, request
 from flask_swagger_ui import get_swaggerui_blueprint
-# from flask_restplus import Api
+from views.view import request_api
 from models import db
 
 SQLALCHEMY_DATABASE = 'D:/study/soft_doc/lab2/database/amazon.db'
@@ -57,8 +57,6 @@ def handle_500_error(_error):
 
 if __name__ == '__main__':
     initialize_app(app)
-    request_api = Blueprint('request_api', __name__)
-    app.register_blueprint(request_api)
     with app.app_context():
         # db.drop_all()
         # db.create_all()
@@ -77,60 +75,65 @@ if __name__ == '__main__':
         
         # importer.import_data('generated_data.csv')
         # db.session.commit()
-        
-    app.run()
+
+    @app.route('/request', methods=['GET'])
+    def get_records():
+        with app.app_context():
+            return jsonify(repr(business_product_manager.get_all_products())), 200
 
 
-@request_api.route('/request', methods=['GET'])
-def get_records():
-    # with app.app_context():
-    #     return jsonify(business_product_manager.get_all_products()[:10])
-    return 'text'
+    @app.route('/request/<string:_id>', methods=['GET'])
+    def get_record_by_id(_id):
+        with app.app_context():
+            if not business_product_manager.get_product_by_id(_id):
+                abort(404)
+            return jsonify(repr(business_product_manager.get_product_by_id(_id))), 200
 
 
-@request_api.route('/request/<string:_id>', methods=['GET'])
-def get_record_by_id(_id):
-    with app.app_context():
-        if not business_product_manager.get_product_by_id(_id):
-            abort(404)
-        return jsonify(business_product_manager.get_product_by_id(_id))
-
-
-@request_api.route('/request', methods=['POST'])
-def create_record():
-    if not request.get_json():
-        abort(400)
-
-    data = request.get_json(force=True)
-
-    if not data.get('name'):
-        abort(400)
-    with app.app_context():
-        return jsonify(business_product_manager.add_product(name=name)), 201
-
-
-@request_api.route('/request/<string:_id>', methods=['PUT'])
-def edit_record(_id):
-    with app.app_context():
-        if not business_product_manager.get_product_by_id(_id):
-            abort(404)
-
+    @app.route('/request', methods=['POST'])
+    def create_record():
         if not request.get_json():
             abort(400)
+
         data = request.get_json(force=True)
 
         if not data.get('name'):
             abort(400)
+        with app.app_context():
+            business_product_manager.add_product(name=data.get('name'))
+            db.session.commit()
+        return '', 201
 
-        return jsonify(business_product_manager.edit_product(_id, data.get('name'))), 200
+
+    @app.route('/request/<string:_id>', methods=['PUT'])
+    def edit_record(_id):
+        with app.app_context():
+            if not business_product_manager.get_product_by_id(_id):
+                abort(404)
+
+            if not request.get_json():
+                abort(400)
+            data = request.get_json(force=True)
+
+            if not data.get('name') and not data.get('subgroup_id') and not data.get('seller_id') and not data.get('cart_id'):
+                abort(400)
+            business_product_manager.edit_product(_id, data.get('name', None), 
+                                                  data.get('subgroup_id', None), data.get('seller_id', None), data.get('cart_id', None))
+            db.session.commit()
+            return jsonify(repr(business_product_manager.get_product_by_id(_id))), 200
 
 
-@request_api.route('/request/<string:_id>', methods=['DELETE'])
-def delete_record(_id):
-    with app.app_context():
-        if not business_product_manager.get_product_by_id(_id):
-            abort(404)
+    @app.route('/request/<string:_id>', methods=['DELETE'])
+    def delete_record(_id):
+        with app.app_context():
+            if not business_product_manager.get_product_by_id(_id):
+                abort(404)
 
-        business_product_manager.remove_product(_id)
+            business_product_manager.remove_product(_id)
+            db.session.commit()
 
-    return '', 204
+        return '', 204
+
+    app.run()
+
+
